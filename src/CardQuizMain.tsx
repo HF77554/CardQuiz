@@ -1,5 +1,5 @@
 import FlashcardList from "./Components/FlashcardList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export interface FlashCardType {
   id: number;
@@ -7,6 +7,12 @@ export interface FlashCardType {
   answer: string;
   wrongOptions: string[];
 }
+
+const decodeString = (str: string) => {
+  const textArea = document.createElement("textarea");
+  textArea.innerHTML = str;
+  return textArea.value;
+};
 
 const sampleFlashCards: FlashCardType[] = [
   {
@@ -25,6 +31,29 @@ const sampleFlashCards: FlashCardType[] = [
 
 export default function CardQuizMain() {
   const [flashCards, flashCardsHandler] = useState(sampleFlashCards);
+
+  useEffect(() => {
+    fetch("https://opentdb.com/api.php?amount=10&category=18&difficulty=medium")
+      .then((response) => response.json())
+      .then((data) =>
+        flashCardsHandler(
+          data.results.map((questionItem, index) => {
+            const answer = decodeString(questionItem.correct_answer);
+            const options = [
+              ...questionItem.incorrect_answers.map((a) => decodeString(a)),
+              answer
+            ];
+            return {
+              id: `${index}-${Date.now()}`,
+              question: decodeString(questionItem.question),
+              answer: answer,
+              wrongOptions: options.sort(() => Math.random() - 0.5)
+            };
+          })
+        )
+      );
+  }, []);
+
   return (
     <div>
       <FlashcardList flashCards={flashCards} />
