@@ -14,23 +14,8 @@ const decodeString = (str: string) => {
   return textArea.value;
 };
 
-const sampleFlashCards: FlashCardType[] = [
-  {
-    id: 1,
-    question: "What is 3+5?",
-    answer: "8",
-    wrongOptions: ["2", "5", "9"]
-  },
-  {
-    id: 2,
-    question: "What is 2+2?",
-    answer: "4",
-    wrongOptions: ["2", "5", "9"]
-  }
-];
-
 export default function CardQuizMain() {
-  const [flashCards, flashCardsHandler] = useState(sampleFlashCards);
+  const [flashCards, flashCardsHandler] = useState([]);
 
   useEffect(() => {
     fetch("https://opentdb.com/api.php?amount=10&category=18&difficulty=medium")
@@ -40,7 +25,9 @@ export default function CardQuizMain() {
           data.results.map((questionItem, index) => {
             const answer = decodeString(questionItem.correct_answer);
             const options = [
-              ...questionItem.incorrect_answers.map((a) => decodeString(a)),
+              ...questionItem.incorrect_answers.map((a: string) =>
+                decodeString(a)
+              ),
               answer
             ];
             return {
@@ -55,7 +42,7 @@ export default function CardQuizMain() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <FlashcardList flashCards={flashCards} />
     </div>
   );

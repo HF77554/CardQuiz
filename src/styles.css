@@ -1,5 +1,18 @@
 body {
   background-color: grey;
+  margin: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 1rem 2rem;
+}
+
+.card-grid {
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .card {
@@ -13,8 +26,6 @@ body {
   transform-style: preserve-3d;
   transition: 150ms;
   cursor: pointer;
-  height: 150px;
-  width: 200px;
   transform: perspective(1000px) rotateY(var(--rotate-y, 0))
     translateY(var(--translate-y, 0));
 }
