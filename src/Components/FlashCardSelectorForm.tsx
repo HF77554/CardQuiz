@@ -1,18 +1,23 @@
 import { useEffect, useState, useRef } from "react";
 
-export default function FlashCardSelectorForm({ onSelection }) {
+export default function FlashCardSelectorForm({ onSelection, onError }) {
   const [quizCategoriesObj, quizCategoriesObjHandler] = useState([]);
   const categoryEl = useRef();
   const numberEl = useRef();
   const difficultyEl = useRef();
 
   useEffect(() => {
-    const fetchJSON = async () => {
-      const response = await fetch("https://opentdb.com/api_category.php");
-      const data = await response.json();
-      quizCategoriesObjHandler(data.trivia_categories);
-    };
-    fetchJSON();
+    try {
+      const fetchJSON = async () => {
+        const response = await fetch("https://opentdb.com/api_category.php");
+        const data = await response.json();
+        quizCategoriesObjHandler(data.trivia_categories);
+      };
+      fetchJSON();
+    } catch (e) {
+      onError();
+      console.log("failed fetch, check fetch of categories");
+    }
   }, []);
 
   //https://opentdb.com/api.php?amount=10&category=9

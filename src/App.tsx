@@ -4,9 +4,8 @@ import FlashCardSelectorForm from "./Components/FlashCardSelectorForm";
 import { useState } from "react";
 
 export default function App() {
-  const [APIurl, APIurlHandler] = useState(
-    "https://opentdb.com/api.php?amount=10&category=18&difficulty=medium"
-  );
+  const [APIurl, APIurlHandler] = useState<string>();
+  const [fetchError, fetchErrorHandler] = useState(false);
 
   const apiSelectorHandler = (category, amount, difficulty, e) => {
     e.preventDefault();
@@ -20,10 +19,27 @@ export default function App() {
     );
   };
 
+  const errorHandler = () => {
+    fetchErrorHandler(true);
+  };
+
   return (
     <div className="app_container">
-      <FlashCardSelectorForm onSelection={apiSelectorHandler} />
-      <CardQuizMain APIurl={APIurl} />
+      {fetchError ? (
+        <h1>Website is currently not working, please come back later</h1>
+      ) : (
+        <div>
+          <FlashCardSelectorForm
+            onSelection={apiSelectorHandler}
+            onError={errorHandler}
+          />
+          {APIurl ? (
+            <CardQuizMain APIurl={APIurl} onError={errorHandler} />
+          ) : (
+            <h1>Click Generate to Create Flashcards!</h1>
+          )}
+        </div>
+      )}
     </div>
   );
 }
