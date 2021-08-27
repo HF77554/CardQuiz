@@ -3,6 +3,9 @@ body {
   margin: 0;
 }
 
+.navbar_container {
+  background-color: white;
+}
 .container {
   max-width: 900px;
   margin: 1rem 2rem;
